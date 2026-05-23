@@ -34,6 +34,19 @@ jobs:
       - name: Build
         run: cmake --build build --parallel
 
+      - name: List artefacts (debug)
+        if: always()
+        run: |
+          echo "=== build root ==="
+          ls -la build || echo "(build/ missing)"
+          echo
+          echo "=== DrawwaveVocoder_artefacts (recursive, dirs only, depth 3) ==="
+          if [ -d build/DrawwaveVocoder_artefacts ]; then
+            find build/DrawwaveVocoder_artefacts -maxdepth 3 -type d
+          else
+            echo "(DrawwaveVocoder_artefacts/ missing)"
+          fi
+
       - name: Package
         run: |
           mkdir -p dist
@@ -71,6 +84,18 @@ jobs:
 
       - name: Build
         run: cmake --build build --parallel
+
+      - name: List artefacts (debug)
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "=== build root ==="
+          if (Test-Path build) { Get-ChildItem build -Force | Format-Table -AutoSize } else { Write-Host "(build/ missing)" }
+          Write-Host "`n=== DrawwaveVocoder_artefacts (recursive) ==="
+          if (Test-Path build/DrawwaveVocoder_artefacts) {
+            Get-ChildItem build/DrawwaveVocoder_artefacts -Recurse -Force |
+              Select-Object FullName | Format-Table -AutoSize -Wrap
+          } else { Write-Host "(DrawwaveVocoder_artefacts/ missing)" }
 
       - name: Package
         shell: pwsh
