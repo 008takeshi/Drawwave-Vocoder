@@ -1,0 +1,37 @@
+# Build output
+build/
+cmake-build-*/
+
+# CPM cache
+.cpm/
+CPM_modules/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# IDE
+*.xcodeproj/
+*.xcworkspace/
+.idea/
+*.user
+*.suo
+.vs/
+
+# Compiled objects
+*.o
+*.a
+*.so
+*.dylib
+*.dSYM/
+
+# Plugin artefacts built locally (use build/ tree instead)
+*.vst3
+*.component
+*.aaxplugin
+
+# Logs
+*.log
+
+# Claude Code project config
+.claude/
