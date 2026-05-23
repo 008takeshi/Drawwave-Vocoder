@@ -37,10 +37,11 @@ jobs:
       - name: Package
         run: |
           mkdir -p dist
-          cd build/DrawwaveVocoder_artefacts
-          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-VST3.zip VST3
-          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-AU.zip AU
-          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-Standalone.zip Standalone
+          DIST="$GITHUB_WORKSPACE/dist"
+          ART=build/DrawwaveVocoder_artefacts/Release
+          ( cd "$ART/VST3"       && zip -r "$DIST/DrawwaveVocoder-${{ github.ref_name }}-macOS-VST3.zip"       "Drawwave Vocoder.vst3" )
+          ( cd "$ART/AU"         && zip -r "$DIST/DrawwaveVocoder-${{ github.ref_name }}-macOS-AU.zip"         "Drawwave Vocoder.component" )
+          ( cd "$ART/Standalone" && zip -r "$DIST/DrawwaveVocoder-${{ github.ref_name }}-macOS-Standalone.zip" "Drawwave Vocoder.app" )
 
       - uses: actions/upload-artifact@v4
         with:
@@ -76,10 +77,12 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path dist -Force | Out-Null
-          Compress-Archive -Path build/DrawwaveVocoder_artefacts/VST3/* `
-            -DestinationPath dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-VST3.zip
-          Compress-Archive -Path build/DrawwaveVocoder_artefacts/Standalone/* `
-            -DestinationPath dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-Standalone.zip
+          Compress-Archive `
+            -Path 'build/DrawwaveVocoder_artefacts/Release/VST3/Drawwave Vocoder.vst3' `
+            -DestinationPath "dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-VST3.zip"
+          Compress-Archive `
+            -Path 'build/DrawwaveVocoder_artefacts/Release/Standalone/Drawwave Vocoder.exe' `
+            -DestinationPath "dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-Standalone.zip"
 
       - uses: actions/upload-artifact@v4
         with:

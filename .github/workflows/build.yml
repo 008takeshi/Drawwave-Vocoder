@@ -35,19 +35,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DrawwaveVocoder-VST3-macOS
-          path: build/DrawwaveVocoder_artefacts/VST3/
+          path: build/DrawwaveVocoder_artefacts/Release/VST3/
 
       - name: Upload AU
         uses: actions/upload-artifact@v4
         with:
           name: DrawwaveVocoder-AU-macOS
-          path: build/DrawwaveVocoder_artefacts/AU/
+          path: build/DrawwaveVocoder_artefacts/Release/AU/
 
       - name: Upload Standalone
         uses: actions/upload-artifact@v4
         with:
           name: DrawwaveVocoder-Standalone-macOS
-          path: build/DrawwaveVocoder_artefacts/Standalone/
+          path: build/DrawwaveVocoder_artefacts/Release/Standalone/
 
   build-windows:
     name: Windows x64
@@ -77,10 +77,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DrawwaveVocoder-VST3-Windows
-          path: build/DrawwaveVocoder_artefacts/VST3/
+          path: build/DrawwaveVocoder_artefacts/Release/VST3/
 
       - name: Upload Standalone
         uses: actions/upload-artifact@v4
         with:
           name: DrawwaveVocoder-Standalone-Windows
-          path: build/DrawwaveVocoder_artefacts/Standalone/
+          path: build/DrawwaveVocoder_artefacts/Release/Standalone/
