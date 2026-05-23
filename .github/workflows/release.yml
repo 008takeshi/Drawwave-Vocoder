@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    name: macOS (Universal Binary)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ninja
+        run: brew install ninja
+
+      - name: Cache CPM packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/cpm-cache
+          key: cpm-macos-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: cpm-macos-
+
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCPM_SOURCE_CACHE=${{ runner.temp }}/cpm-cache
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          cd build/DrawwaveVocoder_artefacts
+          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-VST3.zip VST3
+          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-AU.zip AU
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-bundles
+          path: dist/*.zip
+          if-no-files-found: error
+
+  build-windows:
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Cache CPM packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/cpm-cache
+          key: cpm-windows-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: cpm-windows-
+
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCPM_SOURCE_CACHE=${{ runner.temp }}/cpm-cache"
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          Compress-Archive -Path build/DrawwaveVocoder_artefacts/VST3/* `
+            -DestinationPath dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-VST3.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-bundles
+          path: dist/*.zip
+          if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
