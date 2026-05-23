@@ -40,6 +40,7 @@ jobs:
           cd build/DrawwaveVocoder_artefacts
           zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-VST3.zip VST3
           zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-AU.zip AU
+          zip -r ../../dist/DrawwaveVocoder-${{ github.ref_name }}-macOS-Standalone.zip Standalone
 
       - uses: actions/upload-artifact@v4
         with:
@@ -77,6 +78,8 @@ jobs:
           New-Item -ItemType Directory -Path dist -Force | Out-Null
           Compress-Archive -Path build/DrawwaveVocoder_artefacts/VST3/* `
             -DestinationPath dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-VST3.zip
+          Compress-Archive -Path build/DrawwaveVocoder_artefacts/Standalone/* `
+            -DestinationPath dist/DrawwaveVocoder-${{ github.ref_name }}-Windows-Standalone.zip
 
       - uses: actions/upload-artifact@v4
         with:
