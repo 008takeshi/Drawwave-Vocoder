@@ -2,6 +2,8 @@
 
 マウスで波形・カーブを「描いて」キャラクターを作り込むボコーダー VSTi プラグイン。
 
+![Drawwave Vocoder](screenshot.png)
+
 - **描けるキャリア波形** — 2048サンプルのウェーブテーブルをマウスで自由に描画（ミップマップ・アンチエイリアシング付き）
 - **描けるバンドゲイン** — 16バンドのスペクトル整形をグラフィカルに編集、VUオーバーレイでリアルタイム確認
 - **描ける LFO** — 変調波形も自由に描画、テンポ同期・Retrigger 対応
@@ -12,7 +14,7 @@
 | OS | フォーマット |
 |---|---|
 | macOS 11 以降（Universal Binary x86_64 + arm64） | VST3 / AU / Standalone |
-| Windows 10/11（x64） | VST3 / Standalone |
+| Windows 10/11（x64、未検証） | VST3 / Standalone |
 
 ---
 
